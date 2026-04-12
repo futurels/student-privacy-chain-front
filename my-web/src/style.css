@@ -286,6 +286,10 @@ p {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.toolbar-files {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .field {
   display: grid;
   gap: 8px;
@@ -455,6 +459,70 @@ p {
   background: #fbfcfe;
 }
 
+.attachment-panel {
+  overflow: hidden;
+}
+
+.file-input {
+  max-width: 320px;
+}
+
+.inline-code {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #f5f7fb;
+}
+
+.progress-box {
+  position: relative;
+  width: 120px;
+  height: 8px;
+  border-radius: 999px;
+  background: #e6edf5;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #1b7b4d, #54b47f);
+}
+
+.error-text {
+  margin-top: 6px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.top-gap {
+  margin-top: 16px;
+}
+
+.stepper {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.step-item {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #edf3fa;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+.step-item.active {
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+
 .login-page {
   min-height: 100vh;
   display: grid;
@@ -611,7 +679,8 @@ p {
   .content-grid,
   .content-grid.two-col,
   .role-grid,
-  .toolbar {
+  .toolbar,
+  .toolbar-files {
     grid-template-columns: 1fr;
   }
 

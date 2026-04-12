@@ -3,7 +3,7 @@ export const routeTable = [
     path: '/',
     component: 'ProfileSecurityPage',
     meta: {
-      title: '个人中心',
+      title: '首页',
       requiresAuth: true,
       menu: false,
     },
@@ -16,6 +16,37 @@ export const routeTable = [
       guestOnly: true,
       layout: false,
       menu: false,
+    },
+  },
+  {
+    path: '/files/manage',
+    component: 'FileAttachmentPage',
+    meta: {
+      title: 'P06 文件上传与附件管理',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P06',
+      roles: ['STUDENT', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/privacy/detail',
+    component: 'PrivacyDetailPage',
+    meta: {
+      title: 'P04 隐私数据详情',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT', 'TEACHING_ADMIN', 'COUNSELOR'],
+    },
+  },
+  {
+    path: '/privacy/edit',
+    component: 'PrivacyEditPage',
+    meta: {
+      title: 'P05 新增/编辑隐私数据',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT', 'TEACHING_ADMIN'],
     },
   },
   {

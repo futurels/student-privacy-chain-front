@@ -69,6 +69,9 @@ export const router = {
     if (authStore.hasRole('SYS_ADMIN')) {
       return '/system/users'
     }
+    if (authStore.hasRole('STUDENT') || authStore.hasRole('TEACHING_ADMIN') || authStore.hasRole('COUNSELOR')) {
+      return '/files/manage'
+    }
     return '/profile/security'
   },
   applyGuard(path) {
@@ -97,7 +100,7 @@ export const router = {
     if (currentFullPath.value !== target.fullPath) {
       currentFullPath.value = target.fullPath
     }
-    document.title = `${target.meta.title} - 高校学生隐私数据存证与共享系统`
+    document.title = `${target.meta.title} - Student Privacy Data System`
     return true
   },
 }

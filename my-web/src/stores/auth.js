@@ -40,17 +40,19 @@ export const authStore = {
   user: computed(() => state.user),
   loading: computed(() => state.loading),
   menuItems: computed(() => {
-    const base = [
-      { path: '/profile/security', title: 'Profile & Security', code: 'P25' },
-    ]
-    if (authStore.hasRole('SYS_ADMIN')) {
-      return [
-        { path: '/system/users', title: 'User Management', code: 'P21' },
-        { path: '/system/roles', title: 'Role & Department', code: 'P22' },
-        ...base,
-      ]
+    const items = []
+
+    if (authStore.hasRole('STUDENT') || authStore.hasRole('TEACHING_ADMIN') || authStore.hasRole('SYS_ADMIN')) {
+      items.push({ path: '/files/manage', title: '文件附件管理', code: 'P06' })
     }
-    return base
+
+    if (authStore.hasRole('SYS_ADMIN')) {
+      items.push({ path: '/system/users', title: '用户管理', code: 'P21' })
+      items.push({ path: '/system/roles', title: '角色权限与部门管理', code: 'P22' })
+    }
+
+    items.push({ path: '/profile/security', title: '个人中心与安全设置', code: 'P25' })
+    return items
   }),
   hasRole(role) {
     return Boolean(state.user?.roleCodes?.includes(role))
@@ -91,7 +93,7 @@ export const authStore = {
       const loginResult = await authApi.login(payload)
       setToken(loginResult.accessToken)
       await this.fetchCurrentUser()
-      messageStore.success('User session and menu permissions have been initialized.', 'Login Success')
+      messageStore.success('当前用户会话和菜单权限已初始化。', '登录成功')
       return state.user
     } finally {
       state.loading = false
@@ -109,7 +111,7 @@ export const authStore = {
     state.loading = true
     try {
       const result = await authApi.updatePassword(payload)
-      messageStore.success('Password updated successfully.')
+      messageStore.success('密码修改成功。')
       return result
     } finally {
       state.loading = false

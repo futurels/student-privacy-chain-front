@@ -5,6 +5,9 @@ import { messageStore } from './stores/message'
 import { router } from './router'
 import AppLayout from './components/AppLayout.vue'
 import LoginPage from './views/LoginPage.vue'
+import FileAttachmentPage from './views/FileAttachmentPage.vue'
+import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
+import PrivacyEditPage from './views/PrivacyEditPage.vue'
 import UserManagementPage from './views/UserManagementPage.vue'
 import RoleDeptPage from './views/RoleDeptPage.vue'
 import ProfileSecurityPage from './views/ProfileSecurityPage.vue'
@@ -13,6 +16,9 @@ import NotFoundPage from './views/NotFoundPage.vue'
 
 const pageMap = {
   LoginPage,
+  FileAttachmentPage,
+  PrivacyDetailPage,
+  PrivacyEditPage,
   UserManagementPage,
   RoleDeptPage,
   ProfileSecurityPage,
@@ -34,9 +40,9 @@ onMounted(async () => {
 <template>
   <div v-if="!authStore.initialized.value" class="boot-screen">
     <div class="boot-card">
-      <div class="boot-badge">Stage 2</div>
-      <h1>Loading Login & Permission Module</h1>
-      <p>Restoring token state and initializing current user permissions.</p>
+      <div class="boot-badge">第四阶段</div>
+      <h1>正在加载文件上传与附件管理模块</h1>
+      <p>正在准备上传、元数据查询和附件管理视图。</p>
     </div>
   </div>
   <template v-else>

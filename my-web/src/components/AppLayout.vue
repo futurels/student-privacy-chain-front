@@ -6,6 +6,10 @@ import { formatRoleLabel } from '../utils/helpers'
 
 const menus = computed(() => authStore.menuItems.value)
 const route = computed(() => router.currentRoute.value)
+const pageHeading = computed(() => {
+  const title = route.value?.meta?.title || ''
+  return title.replace(/^P\d+\s*/, '') || '学生隐私数据系统'
+})
 
 const go = (path) => {
   router.navigate(path)
@@ -24,7 +28,7 @@ const logout = async () => {
         <div class="brand-mark">SP</div>
         <div>
           <strong>学生隐私数据系统</strong>
-          <p>第二阶段前端</p>
+          <p>第四阶段前端</p>
         </div>
       </div>
 
@@ -47,7 +51,7 @@ const logout = async () => {
       <header class="shell-header">
         <div>
           <div class="page-chip">{{ route.meta.title }}</div>
-          <h2>登录与权限管理前台</h2>
+          <h2>{{ pageHeading }}</h2>
         </div>
 
         <div class="user-panel">
