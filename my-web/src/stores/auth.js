@@ -4,6 +4,7 @@ import { usersApi } from '../api/users'
 import { http } from '../api/http'
 import { tokenStorage } from '../utils/storage'
 import { messageStore } from './message'
+import { routeTable } from '../router/routes'
 
 const state = reactive({
   token: tokenStorage.get(),
@@ -33,25 +34,22 @@ const clearSession = () => {
   state.permissionsTree = []
 }
 
+const canAccessRoute = (route) => !route.meta.roles?.length || route.meta.roles.some((role) => authStore.hasRole(role))
+
 export const authStore = {
   state,
   initialized,
   isAuthenticated: computed(() => Boolean(state.token && state.user)),
   user: computed(() => state.user),
   loading: computed(() => state.loading),
-  menuItems: computed(() => {
-    const base = [
-      { path: '/profile/security', title: 'Profile & Security', code: 'P25' },
-    ]
-    if (authStore.hasRole('SYS_ADMIN')) {
-      return [
-        { path: '/system/users', title: 'User Management', code: 'P21' },
-        { path: '/system/roles', title: 'Role & Department', code: 'P22' },
-        ...base,
-      ]
-    }
-    return base
-  }),
+  menuItems: computed(() => routeTable
+    .filter((route) => route.meta.menu)
+    .filter(canAccessRoute)
+    .map((route) => ({
+      path: route.path,
+      title: route.meta.title.replace(/^P\d+\s+/, ''),
+      code: route.meta.menuCode,
+    }))),
   hasRole(role) {
     return Boolean(state.user?.roleCodes?.includes(role))
   },
@@ -73,6 +71,7 @@ export const authStore = {
   async fetchCurrentUser() {
     const user = await authApi.getCurrentUser()
     state.user = user
+
     if (this.hasRole('SYS_ADMIN')) {
       const [roles, departments, permissions] = await Promise.allSettled([
         usersApi.getRoles(),
@@ -82,7 +81,12 @@ export const authStore = {
       state.roles = roles.status === 'fulfilled' ? roles.value.records || [] : []
       state.departments = departments.status === 'fulfilled' ? departments.value.records || [] : []
       state.permissionsTree = permissions.status === 'fulfilled' ? permissions.value.nodes || [] : []
+    } else {
+      state.roles = []
+      state.departments = []
+      state.permissionsTree = []
     }
+
     return user
   },
   async login(payload) {

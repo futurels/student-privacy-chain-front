@@ -286,6 +286,10 @@ p {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.toolbar-wide {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
 .field {
   display: grid;
   gap: 8px;
@@ -306,6 +310,10 @@ p {
 
 .content-grid.two-col {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-two-side {
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.8fr);
 }
 
 .detail-panel {
@@ -453,6 +461,75 @@ p {
 
 .tree-node.child {
   background: #fbfcfe;
+}
+
+.pager-row,
+.stepper,
+.side-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pager-row {
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.stepper {
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.step-item {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #eef3f8;
+  color: var(--text-sub);
+  font-weight: 700;
+}
+
+.step-item.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.content-card,
+.summary-box,
+.info-note {
+  padding: 16px;
+  border-radius: 16px;
+  background: #f7f9fc;
+}
+
+.content-card,
+.summary-box {
+  margin-top: 18px;
+}
+
+.content-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.long-code {
+  display: block;
+  white-space: normal;
+  word-break: break-all;
+  padding: 14px;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.side-actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.info-note {
+  margin-top: 18px;
 }
 
 .login-page {

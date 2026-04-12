@@ -2,8 +2,20 @@ import { ref } from 'vue'
 
 const items = ref([])
 let seed = 0
+let lastMessageFingerprint = ''
+let lastMessageAt = 0
 
 const push = ({ type = 'info', title = '提示', content = '', duration = 3000 }) => {
+  const fingerprint = `${type}|${title}|${content}`
+  const now = Date.now()
+
+  if (lastMessageFingerprint === fingerprint && now - lastMessageAt < 1200) {
+    return
+  }
+
+  lastMessageFingerprint = fingerprint
+  lastMessageAt = now
+
   const id = `${Date.now()}-${seed += 1}`
   items.value.push({ id, type, title, content })
   window.setTimeout(() => {

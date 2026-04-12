@@ -40,3 +40,24 @@ export const buildTree = (items = []) => {
   })
   return roots
 }
+
+export const maskValue = (value, left = 2, right = 2) => {
+  if (value === null || value === undefined || value === '') {
+    return '--'
+  }
+  const text = String(value)
+  if (text.length <= left + right) {
+    return '*'.repeat(text.length)
+  }
+  return `${text.slice(0, left)}${'*'.repeat(Math.max(4, text.length - left - right))}${text.slice(-right)}`
+}
+
+export const formatDataType = (type) => {
+  const map = {
+    IDENTITY: 'Identity',
+    GRADE: 'Grade',
+    STATUS: 'Status',
+    HEALTH_REPORT: 'Health Report',
+  }
+  return map[type] || type || '--'
+}

@@ -23,8 +23,8 @@ const logout = async () => {
       <div class="brand-block">
         <div class="brand-mark">SP</div>
         <div>
-          <strong>学生隐私数据系统</strong>
-          <p>第二阶段前端</p>
+          <strong>Student Privacy Data System</strong>
+          <p>Front-end delivery by stage</p>
         </div>
       </div>
 
@@ -47,19 +47,19 @@ const logout = async () => {
       <header class="shell-header">
         <div>
           <div class="page-chip">{{ route.meta.title }}</div>
-          <h2>登录与权限管理前台</h2>
+          <h2>Stage-based Admin Console</h2>
         </div>
 
         <div class="user-panel">
           <div>
             <strong>{{ authStore.user.value?.name || '--' }}</strong>
             <p>
-              {{ authStore.user.value?.departmentName || '未分配部门' }}
+              {{ authStore.user.value?.departmentName || 'No Department' }}
               ·
               {{ formatRoleLabel(authStore.user.value?.roleCodes?.[0]) }}
             </p>
           </div>
-          <button class="ghost-button" type="button" @click="logout">退出登录</button>
+          <button class="ghost-button" type="button" @click="logout">Logout</button>
         </div>
       </header>
 
