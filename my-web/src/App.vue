@@ -5,9 +5,15 @@ import { messageStore } from './stores/message'
 import { router } from './router'
 import AppLayout from './components/AppLayout.vue'
 import LoginPage from './views/LoginPage.vue'
+import PrivacyListPage from './views/PrivacyListPage.vue'
 import FileAttachmentPage from './views/FileAttachmentPage.vue'
 import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
 import PrivacyEditPage from './views/PrivacyEditPage.vue'
+import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
+import EvidenceListPage from './views/EvidenceListPage.vue'
+import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
+import EvidenceApprovalPage from './views/EvidenceApprovalPage.vue'
+import ApprovalRecordsPage from './views/ApprovalRecordsPage.vue'
 import UserManagementPage from './views/UserManagementPage.vue'
 import RoleDeptPage from './views/RoleDeptPage.vue'
 import ProfileSecurityPage from './views/ProfileSecurityPage.vue'
@@ -16,9 +22,15 @@ import NotFoundPage from './views/NotFoundPage.vue'
 
 const pageMap = {
   LoginPage,
+  PrivacyListPage,
   FileAttachmentPage,
   PrivacyDetailPage,
   PrivacyEditPage,
+  EvidenceApplyPage,
+  EvidenceListPage,
+  EvidenceDetailPage,
+  EvidenceApprovalPage,
+  ApprovalRecordsPage,
   UserManagementPage,
   RoleDeptPage,
   ProfileSecurityPage,
@@ -40,16 +52,16 @@ onMounted(async () => {
 <template>
   <div v-if="!authStore.initialized.value" class="boot-screen">
     <div class="boot-card">
-      <div class="boot-badge">第四阶段</div>
-      <h1>正在加载文件上传与附件管理模块</h1>
-      <p>正在准备上传、元数据查询和附件管理视图。</p>
+      <div class="boot-badge">第六阶段</div>
+      <h1>正在加载学生隐私数据工作台</h1>
+      <p>正在准备隐私数据列表、附件工作区、存证申请与记录联动页面。</p>
     </div>
   </div>
   <template v-else>
     <AppLayout v-if="showLayout">
-      <component :is="currentView" />
+      <component :is="currentView" :key="currentRoute.fullPath" />
     </AppLayout>
-    <component :is="currentView" v-else />
+    <component :is="currentView" :key="currentRoute.fullPath" v-else />
   </template>
 
   <div class="message-stack">

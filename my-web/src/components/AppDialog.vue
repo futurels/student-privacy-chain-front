@@ -1,4 +1,6 @@
 <script setup>
+import { useSlots } from 'vue'
+
 defineProps({
   open: {
     type: Boolean,
@@ -15,6 +17,7 @@ defineProps({
 })
 
 const emit = defineEmits(['close'])
+const slots = useSlots()
 </script>
 
 <template>
@@ -27,6 +30,9 @@ const emit = defineEmits(['close'])
         </div>
         <div class="dialog-body">
           <slot />
+        </div>
+        <div v-if="slots.footer" class="dialog-footer">
+          <slot name="footer" />
         </div>
       </div>
     </div>
