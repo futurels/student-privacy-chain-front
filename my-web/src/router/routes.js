@@ -19,14 +19,14 @@ export const routeTable = [
     },
   },
   {
-    path: '/files/manage',
-    component: 'FileAttachmentPage',
+    path: '/privacy/list',
+    component: 'PrivacyListPage',
     meta: {
-      title: 'P06 文件上传与附件管理',
+      title: 'P03 我的隐私数据',
       requiresAuth: true,
       menu: true,
-      menuCode: 'P06',
-      roles: ['STUDENT', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+      menuCode: 'P03',
+      roles: ['STUDENT'],
     },
   },
   {
@@ -47,6 +47,80 @@ export const routeTable = [
       requiresAuth: true,
       menu: false,
       roles: ['STUDENT', 'TEACHING_ADMIN'],
+    },
+  },
+  {
+    path: '/files/manage',
+    component: 'FileAttachmentPage',
+    meta: {
+      title: 'P06 文件上传与附件管理',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P06',
+      roles: ['STUDENT', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/evidence/apply',
+    component: 'EvidenceApplyPage',
+    meta: {
+      title: 'P07 提交存证申请',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT', 'TEACHING_ADMIN'],
+    },
+  },
+  {
+    path: '/evidence/list',
+    component: 'EvidenceListPage',
+    meta: {
+      title: 'P08 存证申请与记录列表',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P08',
+      roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN'],
+    },
+  },
+  {
+    path: '/approval/center',
+    component: 'EvidenceListPage',
+    meta: {
+      title: 'P13 审批中心',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P13',
+      roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/evidence/detail',
+    component: 'EvidenceDetailPage',
+    meta: {
+      title: 'P09 存证详情与一致性校验',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/evidence/approval',
+    component: 'EvidenceApprovalPage',
+    meta: {
+      title: 'P14 存证审批详情',
+      requiresAuth: true,
+      menu: false,
+      roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/approval/records',
+    component: 'ApprovalRecordsPage',
+    meta: {
+      title: 'P17 审批记录查询',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P17',
+      roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
     },
   },
   {
