@@ -42,28 +42,34 @@ const goBack = () => {
   router.navigate('/privacy/list')
 }
 
-const goEdit = async () => {
+const ensureLatest = async () => {
   const latest = await refreshDetail({ silent: true })
   if (!latest?.id) {
     messageStore.warning('当前隐私数据详情尚未加载完成，请稍后重试。')
+    return null
+  }
+  return latest
+}
+
+const goEdit = async () => {
+  const latest = await ensureLatest()
+  if (!latest) {
     return
   }
   router.navigate(buildRouteWithQuery('/privacy/edit', { id: privacyDataId.value }))
 }
 
 const goWorkspace = async () => {
-  const latest = await refreshDetail({ silent: true })
-  if (!latest?.id) {
-    messageStore.warning('当前隐私数据详情尚未加载完成，请稍后重试。')
+  const latest = await ensureLatest()
+  if (!latest) {
     return
   }
   router.navigate(buildRouteWithQuery('/files/manage', { privacyDataId: privacyDataId.value }))
 }
 
 const goEvidenceApply = async () => {
-  const latest = await refreshDetail({ silent: true })
-  if (!latest?.id) {
-    messageStore.warning('当前隐私数据详情尚未加载完成，请稍后重试。')
+  const latest = await ensureLatest()
+  if (!latest) {
     return
   }
 
@@ -79,6 +85,18 @@ const goEvidenceApply = async () => {
   }))
 }
 
+const goAuthorizationApply = async () => {
+  const latest = await ensureLatest()
+  if (!latest) {
+    return
+  }
+
+  router.navigate(buildRouteWithQuery('/authorization/apply', {
+    privacyDataId: privacyDataId.value,
+    source: 'p04',
+  }))
+}
+
 const goApplications = () => {
   router.navigate(buildRouteWithQuery('/evidence/list', {
     tab: 'applications',
@@ -89,6 +107,12 @@ const goApplications = () => {
 const goRecords = () => {
   router.navigate(buildRouteWithQuery('/evidence/list', {
     tab: 'evidences',
+    privacyDataId: privacyDataId.value,
+  }))
+}
+
+const goAuthorizationList = () => {
+  router.navigate(buildRouteWithQuery('/authorization/list', {
     privacyDataId: privacyDataId.value,
   }))
 }
@@ -109,12 +133,13 @@ watch(
         <div>
           <span class="page-chip">P04</span>
           <h3>{{ detail?.title || '隐私数据详情' }}</h3>
-          <p>围绕当前隐私数据查看状态、继续完善内容、进入附件工作区，并从这里分发到存证申请与记录页面。</p>
+          <p>围绕当前隐私数据查看状态、继续完善内容、进入附件工作区，并从这里分发到存证申请与授权申请页面。</p>
         </div>
         <div class="action-row">
           <button class="ghost-button" type="button" @click="goBack">返回列表</button>
           <button class="secondary-button" type="button" :disabled="refreshing" @click="goEdit">继续完善</button>
           <button class="secondary-button" type="button" :disabled="refreshing" @click="goWorkspace">管理附件</button>
+          <button class="secondary-button" type="button" :disabled="refreshing" @click="goAuthorizationApply">发起共享授权</button>
           <button class="primary-button" type="button" :disabled="refreshing" @click="goEvidenceApply">提交存证申请</button>
         </div>
       </div>
@@ -185,7 +210,7 @@ watch(
 
           <div class="notice-card">
             <strong>数据内容</strong>
-            <p>{{ detail.content || '暂无结构化内容' }}</p>
+            <p>{{ detail.content || '暂无结构化内容。' }}</p>
           </div>
 
           <div class="notice-card">
@@ -194,8 +219,9 @@ watch(
           </div>
 
           <div class="action-row">
-            <button class="secondary-button" type="button" @click="goApplications">查看申请</button>
-            <button class="secondary-button" type="button" @click="goRecords">查看记录</button>
+            <button class="secondary-button" type="button" @click="goAuthorizationList">查看授权申请</button>
+            <button class="secondary-button" type="button" @click="goApplications">查看存证申请</button>
+            <button class="secondary-button" type="button" @click="goRecords">查看存证记录</button>
           </div>
         </aside>
       </div>

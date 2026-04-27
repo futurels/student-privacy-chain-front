@@ -4,6 +4,9 @@ export const privacyApi = {
   getPrivacyDataPage(params = {}, options = {}) {
     return http.get('/api/privacy-data', params, options)
   },
+  getShareablePrivacyDataPage(params = {}, options = {}) {
+    return http.get('/api/privacy-data/shareable', params, options)
+  },
   getPrivacyDataDetail(id, options = {}) {
     return http.get(`/api/privacy-data/${id}`, undefined, options)
   },

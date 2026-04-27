@@ -60,6 +60,13 @@ const manageAttachments = (row) => {
   router.navigate(buildRouteWithQuery('/files/manage', { privacyDataId: row.id }))
 }
 
+const applyAuthorization = (row) => {
+  router.navigate(buildRouteWithQuery('/authorization/apply', {
+    privacyDataId: row.id,
+    source: 'p03',
+  }))
+}
+
 const submitEvidence = (row) => {
   const gate = getPrivacySubmissionGate(row)
   if (!gate.canSubmit) {
@@ -126,7 +133,7 @@ onMounted(loadPage)
         <div>
           <span class="page-chip">P03</span>
           <h3>我的隐私数据</h3>
-          <p>以隐私数据为中心查看、继续完善、管理附件和提交存证申请，支持中断后回来继续处理。</p>
+          <p>以隐私数据为中心查看、继续完善、管理附件、发起授权和提交存证申请，支持中断后回来继续处理。</p>
         </div>
         <div class="action-row">
           <button class="primary-button" type="button" @click="openCreate">新建隐私数据</button>
@@ -198,6 +205,7 @@ onMounted(loadPage)
               <div class="action-row">
                 <button class="text-button" type="button" @click="continueEdit(row)">继续完善</button>
                 <button class="text-button" type="button" @click="manageAttachments(row)">管理附件</button>
+                <button class="text-button" type="button" @click="applyAuthorization(row)">发起授权</button>
                 <button class="text-button" type="button" @click="submitEvidence(row)">提交存证</button>
                 <button class="text-button" type="button" @click="viewApplications(row)">查看申请</button>
                 <button class="text-button" type="button" @click="viewRecords(row)">查看记录</button>
@@ -205,7 +213,7 @@ onMounted(loadPage)
             </td>
           </tr>
           <tr v-if="!records.length">
-            <td colspan="7" class="empty-cell">当前还没有隐私数据记录，可以先新建一条数据后再继续附件和存证流程。</td>
+            <td colspan="7" class="empty-cell">当前还没有隐私数据记录，可以先新建一条数据后再继续附件、授权和存证流程。</td>
           </tr>
         </tbody>
       </table>

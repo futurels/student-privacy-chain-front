@@ -349,3 +349,24 @@ export const getTagClassByStatus = (status) => {
   }
   return 'tag-blue'
 }
+
+export const formatAuthorizationStatus = (status) => {
+  const map = {
+    PENDING_REVIEW: '待审核',
+    APPROVED: '已通过',
+    REJECTED: '已驳回',
+    ACTIVE: '已生效',
+    REVOKED: '已撤销',
+    EXPIRED: '已到期',
+  }
+  return map[status] || status || '--'
+}
+
+export const formatAuthorizationTargetType = (type) => {
+  const map = {
+    COUNSELOR: '辅导员',
+    TEACHING_ADMIN: '教务管理员',
+    THIRD_PARTY: '第三方机构',
+  }
+  return map[type] || type || '--'
+}

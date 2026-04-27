@@ -9,6 +9,8 @@ import PrivacyListPage from './views/PrivacyListPage.vue'
 import FileAttachmentPage from './views/FileAttachmentPage.vue'
 import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
 import PrivacyEditPage from './views/PrivacyEditPage.vue'
+import AuthorizationApplyPage from './views/AuthorizationApplyPage.vue'
+import AuthorizationListPage from './views/AuthorizationListPage.vue'
 import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
 import EvidenceListPage from './views/EvidenceListPage.vue'
 import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
@@ -26,6 +28,8 @@ const pageMap = {
   FileAttachmentPage,
   PrivacyDetailPage,
   PrivacyEditPage,
+  AuthorizationApplyPage,
+  AuthorizationListPage,
   EvidenceApplyPage,
   EvidenceListPage,
   EvidenceDetailPage,
@@ -54,7 +58,7 @@ onMounted(async () => {
     <div class="boot-card">
       <div class="boot-badge">第六阶段</div>
       <h1>正在加载学生隐私数据工作台</h1>
-      <p>正在准备隐私数据列表、附件工作区、存证申请与记录联动页面。</p>
+      <p>正在准备隐私数据、存证申请、授权申请与审批联动页面。</p>
     </div>
   </div>
   <template v-else>

@@ -10,10 +10,14 @@ const state = reactive({
     pageNum: 1,
     pageSize: 10,
   },
+  shareableRecords: [],
+  shareableTotal: 0,
+  selectedShareData: null,
   current: null,
 })
 
 const loading = ref(false)
+const shareableLoading = ref(false)
 
 const normalizePageResult = (result = {}, fallback = {}) => ({
   records: result.records || [],
@@ -35,6 +39,7 @@ const normalizeFilters = (filters = {}) => {
 export const privacyStore = {
   state,
   loading,
+  shareableLoading,
   async loadPage(filters = {}) {
     loading.value = true
     try {
@@ -45,6 +50,33 @@ export const privacyStore = {
     } finally {
       loading.value = false
     }
+  },
+  async loadShareablePrivacyData(filters = {}) {
+    shareableLoading.value = true
+    try {
+      const params = {
+        pageNum: filters.pageNum || 1,
+        pageSize: filters.pageSize || 10,
+        dataType: filters.dataType || undefined,
+      }
+      const result = await privacyApi.getShareablePrivacyDataPage(params)
+      state.shareableRecords = result.records || []
+      state.shareableTotal = result.total || 0
+      return {
+        records: state.shareableRecords,
+        total: state.shareableTotal,
+        pageNum: result.pageNum || params.pageNum,
+        pageSize: result.pageSize || params.pageSize,
+      }
+    } finally {
+      shareableLoading.value = false
+    }
+  },
+  selectShareData(record) {
+    state.selectedShareData = record || null
+  },
+  clearSelectedShareData() {
+    state.selectedShareData = null
   },
   async loadDetail(id) {
     if (!id) {

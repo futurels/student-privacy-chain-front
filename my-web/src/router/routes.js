@@ -82,6 +82,37 @@ export const routeTable = [
     },
   },
   {
+    path: '/evidence/detail',
+    component: 'EvidenceDetailPage',
+    meta: {
+      title: 'P09 存证详情与一致性校验',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/authorization/apply',
+    component: 'AuthorizationApplyPage',
+    meta: {
+      title: 'P10 发起共享授权',
+      requiresAuth: true,
+      menu: false,
+      roles: ['STUDENT'],
+    },
+  },
+  {
+    path: '/authorization/list',
+    component: 'AuthorizationListPage',
+    meta: {
+      title: 'P11 授权列表与详情',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P11',
+      roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN'],
+    },
+  },
+  {
     path: '/approval/center',
     component: 'EvidenceListPage',
     meta: {
@@ -90,16 +121,6 @@ export const routeTable = [
       menu: true,
       menuCode: 'P13',
       roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
-    },
-  },
-  {
-    path: '/evidence/detail',
-    component: 'EvidenceDetailPage',
-    meta: {
-      title: 'P09 存证详情与一致性校验',
-      requiresAuth: true,
-      menu: false,
-      roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
     },
   },
   {
