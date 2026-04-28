@@ -11,6 +11,7 @@ import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
 import PrivacyEditPage from './views/PrivacyEditPage.vue'
 import AuthorizationApplyPage from './views/AuthorizationApplyPage.vue'
 import AuthorizationListPage from './views/AuthorizationListPage.vue'
+import AuthorizationApprovalPage from './views/AuthorizationApprovalPage.vue'
 import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
 import EvidenceListPage from './views/EvidenceListPage.vue'
 import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
@@ -30,6 +31,7 @@ const pageMap = {
   PrivacyEditPage,
   AuthorizationApplyPage,
   AuthorizationListPage,
+  AuthorizationApprovalPage,
   EvidenceApplyPage,
   EvidenceListPage,
   EvidenceDetailPage,

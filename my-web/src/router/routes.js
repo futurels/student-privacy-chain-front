@@ -124,6 +124,16 @@ export const routeTable = [
     },
   },
   {
+    path: '/authorization/approval',
+    component: 'AuthorizationApprovalPage',
+    meta: {
+      title: 'P15 授权审批详情',
+      requiresAuth: true,
+      menu: false,
+      roles: ['COUNSELOR', 'TEACHING_ADMIN'],
+    },
+  },
+  {
     path: '/evidence/approval',
     component: 'EvidenceApprovalPage',
     meta: {

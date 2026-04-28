@@ -10,4 +10,10 @@ export const authorizationsApi = {
   getApplicationDetail(id, options = {}) {
     return http.get(`/api/authorizations/applications/${id}`, undefined, options)
   },
+  approveApplication(id, payload = {}, options = {}) {
+    return http.post(`/api/authorizations/applications/${id}/approve`, payload, options)
+  },
+  rejectApplication(id, payload = {}, options = {}) {
+    return http.post(`/api/authorizations/applications/${id}/reject`, payload, options)
+  },
 }

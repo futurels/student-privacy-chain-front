@@ -29,6 +29,15 @@ const normalizeAuthorizationRecord = (record = {}) => ({
   status: record.status || '',
   submittedAt: record.submittedAt || record.submitted_at || record.createdAt || record.created_at || '',
   reviewComment: record.reviewComment || record.review_comment || '',
+  reviewedAt: record.reviewedAt || record.reviewed_at || '',
+  reviewerId: record.reviewerId || record.reviewer_id || '',
+  reviewerName: record.reviewerName || record.reviewer_name || '',
+  privacyTitle: record.privacyTitle || record.privacyDataTitle || record.title || '',
+  dataType: record.dataType || record.dataTypeCode || '',
+  dataTypeName: record.dataTypeName || '',
+  securityLevel: record.securityLevel || '',
+  evidenceNo: record.evidenceNo || '',
+  txId: record.txId || '',
 })
 
 const normalizePageResult = (result = {}, fallback = {}) => ({
@@ -80,6 +89,26 @@ export const authorizationsStore = {
     try {
       state.current = normalizeAuthorizationRecord(await authorizationsApi.getApplicationDetail(id, options))
       return state.current
+    } finally {
+      loading.value = false
+    }
+  },
+  async approve(id, payload = {}, options = {}) {
+    loading.value = true
+    try {
+      const result = normalizeAuthorizationRecord(await authorizationsApi.approveApplication(id, payload, options))
+      messageStore.success('授权申请已审批通过。', '审批完成')
+      return result
+    } finally {
+      loading.value = false
+    }
+  },
+  async reject(id, payload = {}, options = {}) {
+    loading.value = true
+    try {
+      const result = normalizeAuthorizationRecord(await authorizationsApi.rejectApplication(id, payload, options))
+      messageStore.success('授权申请已驳回。', '审批完成')
+      return result
     } finally {
       loading.value = false
     }

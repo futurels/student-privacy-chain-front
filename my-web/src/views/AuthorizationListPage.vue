@@ -154,7 +154,6 @@ onMounted(async () => {
           <option value="">全部目标对象</option>
           <option value="COUNSELOR">辅导员</option>
           <option value="TEACHING_ADMIN">教务管理员</option>
-          <option value="THIRD_PARTY">第三方机构</option>
         </select>
         <div class="action-row">
           <button class="secondary-button" type="submit">查询</button>

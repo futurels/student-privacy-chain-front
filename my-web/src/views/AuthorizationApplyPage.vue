@@ -50,8 +50,6 @@ const dataTypeOptions = [
 const targetTypeOptions = [
   { value: 'COUNSELOR', label: '辅导员' },
   { value: 'TEACHING_ADMIN', label: '教务管理员' },
-  { value: 'SYS_ADMIN', label: '系统管理员' },
-  { value: 'THIRD_PARTY', label: '第三方机构' },
 ]
 
 const maxPage = computed(() => Math.max(1, Math.ceil(pageData.total / pageData.pageSize)))
@@ -297,6 +295,10 @@ const validateForm = () => {
   }
   if (!form.targetType) {
     messageStore.warning('请选择目标对象类型')
+    return false
+  }
+  if (!targetTypeOptions.some((item) => item.value === form.targetType)) {
+    messageStore.warning('目标对象类型仅支持辅导员或教务管理员')
     return false
   }
   if (!form.targetId.trim()) {
