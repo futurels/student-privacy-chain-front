@@ -2075,6 +2075,44 @@ p {
   font-weight: 700;
 }
 
+.authorization-filter-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.access-filter-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.archive-filter-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.key-value-list {
+  display: grid;
+  gap: 12px;
+}
+
+.key-value-item {
+  display: grid;
+  gap: 8px;
+}
+
+.key-value-item span {
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.masked-block {
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #e5edf6;
+  background: #fbfdff;
+  color: var(--text-main);
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
 @media (max-width: 1200px) {
   .login-page,
   .admin-shell,
@@ -2105,7 +2143,10 @@ p {
   .attachment-search-grid,
   .summary-grid,
   .metric-grid,
-  .evidence-filter-grid {
+  .evidence-filter-grid,
+  .authorization-filter-grid,
+  .access-filter-grid,
+  .archive-filter-grid {
     grid-template-columns: 1fr;
   }
 

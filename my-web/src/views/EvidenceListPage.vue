@@ -3,12 +3,15 @@ import { computed, onMounted, reactive, ref } from 'vue'
 import AppDialog from '../components/AppDialog.vue'
 import AppPagination from '../components/AppPagination.vue'
 import { evidenceStore } from '../stores/evidence'
+import { authorizationsStore } from '../stores/authorizations'
 import { authStore } from '../stores/auth'
 import { messageStore } from '../stores/message'
 import { router } from '../router'
 import {
   buildRouteWithQuery,
   formatChainEvidenceStatus,
+  formatAuthorizationStatus,
+  formatAuthorizationTargetType,
   formatDateTime,
   formatEvidenceApplicationStatus,
   formatEvidenceStatus,
@@ -47,6 +50,14 @@ const detailOpen = ref(false)
 const dialogLoading = ref(false)
 const dialogDetail = ref(null)
 const chainingRowKey = ref('')
+const authorizationFilters = reactive({
+  pageNum: 1,
+  pageSize: 8,
+  status: 'PENDING_REVIEW',
+  privacyDataId: '',
+  studentId: '',
+  targetType: '',
+})
 
 const isApprovalCenter = computed(() => routePath.value === '/approval/center')
 const isApprovalRecords = computed(() => routePath.value === '/approval/records')
@@ -58,6 +69,8 @@ const applications = computed(() => evidenceStore.state.applications)
 const evidences = computed(() => evidenceStore.state.evidences)
 const applicationTotal = computed(() => evidenceStore.state.applicationTotal)
 const evidenceTotal = computed(() => evidenceStore.state.evidenceTotal)
+const authorizationApplications = computed(() => authorizationsStore.state.pageData.records)
+const authorizationTotal = computed(() => authorizationsStore.state.pageData.total)
 
 const canReviewAction = computed(() => authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN'))
 const canOpenApprovalDetail = computed(() => canReviewAction.value || authStore.hasRole('SYS_ADMIN'))
@@ -168,6 +181,7 @@ const recordStats = computed(() => {
 
 const loadApplications = () => evidenceStore.loadApplications(applicationFilters)
 const loadEvidences = () => evidenceStore.loadEvidences(recordFilters)
+const loadAuthorizationTodo = () => authorizationsStore.loadPage(authorizationFilters)
 
 const switchTab = async (tab) => {
   if (isApprovalMode.value) {
@@ -223,6 +237,16 @@ const goApproval = (row) => {
     applicationNo: row.applicationNo,
     privacyDataId: row.privacyDataId,
     status: getApprovalStatus(row),
+    source: routePath.value,
+  }))
+}
+
+const goAuthorizationApproval = (row) => {
+  router.navigate(buildRouteWithQuery('/authorization/approval', {
+    id: row.applicationId,
+    applicationNo: row.applicationNo,
+    privacyDataId: row.privacyDataId,
+    status: row.status,
     source: routePath.value,
   }))
 }
@@ -346,14 +370,21 @@ const changeRecordPage = async (page) => {
   await loadEvidences()
 }
 
+const changeAuthorizationPage = async (page) => {
+  authorizationFilters.pageNum = page
+  await loadAuthorizationTodo()
+}
+
 onMounted(async () => {
   applicationFilters.privacyDataId = routeQuery.value.get('privacyDataId') || ''
   recordFilters.privacyDataId = routeQuery.value.get('privacyDataId') || ''
 
   if (isApprovalCenter.value) {
     applicationFilters.status = routeQuery.value.get('status') || 'PENDING_REVIEW'
+    authorizationFilters.privacyDataId = routeQuery.value.get('privacyDataId') || ''
+    authorizationFilters.status = 'PENDING_REVIEW'
     evidenceStore.setActiveTab('applications')
-    await loadApplications()
+    await Promise.allSettled([loadApplications(), loadAuthorizationTodo()])
     return
   }
 
@@ -482,6 +513,68 @@ onMounted(async () => {
         <span>{{ isApplicationTab ? '已驳回' : '异常状态' }}</span>
         <strong>{{ isApplicationTab ? applicationStats.rejected : recordStats.failed }}</strong>
       </article>
+    </section>
+
+    <section v-if="isApprovalCenter" class="panel">
+      <div class="table-meta">
+        <span>授权待办列表</span>
+        <span>{{ authorizationsStore.loading.value ? '正在加载...' : '仅展示待审核授权申请，进入详情后执行通过或驳回。' }}</span>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>申请主键</th>
+            <th>申请编号</th>
+            <th>隐私数据ID</th>
+            <th>目标对象</th>
+            <th>用途</th>
+            <th>到期时间</th>
+            <th>状态</th>
+            <th>提交时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="row in authorizationApplications" :key="row.applicationId">
+            <td>{{ row.applicationId }}</td>
+            <td>{{ row.applicationNo || '--' }}</td>
+            <td>{{ row.privacyDataId || '--' }}</td>
+            <td>{{ formatAuthorizationTargetType(row.targetType) }} / {{ row.targetId || '--' }}</td>
+            <td :title="row.purpose || '--'">{{ row.purpose || '--' }}</td>
+            <td>{{ formatDateTime(row.expireAt) }}</td>
+            <td>
+              <span class="tag" :class="getTagClassByStatus(row.status)">
+                {{ formatAuthorizationStatus(row.status) }}
+              </span>
+            </td>
+            <td>{{ formatDateTime(row.submittedAt) }}</td>
+            <td>
+              <div class="action-row">
+                <button
+                  v-if="canReviewAction"
+                  class="text-button"
+                  type="button"
+                  @click="goAuthorizationApproval(row)"
+                >
+                  授权审批详情
+                </button>
+                <button class="text-button" type="button" @click="goPrivacyDetail(row.privacyDataId)">查看关联隐私数据</button>
+              </div>
+            </td>
+          </tr>
+          <tr v-if="!authorizationApplications.length">
+            <td colspan="9" class="empty-cell">当前没有待审核授权申请。</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <AppPagination
+        :page-num="authorizationFilters.pageNum"
+        :page-size="authorizationFilters.pageSize"
+        :total="authorizationTotal"
+        @change="changeAuthorizationPage"
+      />
     </section>
 
     <section class="panel">

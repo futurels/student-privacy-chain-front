@@ -16,4 +16,7 @@ export const privacyApi = {
   updatePrivacyData(id, payload, options = {}) {
     return http.put(`/api/privacy-data/${id}`, payload, options)
   },
+  getStudentArchive(studentId, params = {}, options = {}) {
+    return http.get(`/api/students/${studentId}/privacy-data`, params, options)
+  },
 }

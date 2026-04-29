@@ -105,11 +105,22 @@ export const routeTable = [
     path: '/authorization/list',
     component: 'AuthorizationListPage',
     meta: {
-      title: 'P11 授权列表与详情',
+      title: 'P11 授权申请与有效授权',
       requiresAuth: true,
       menu: true,
       menuCode: 'P11',
       roles: ['STUDENT', 'COUNSELOR', 'TEACHING_ADMIN'],
+    },
+  },
+  {
+    path: '/access/logs',
+    component: 'AccessLogsPage',
+    meta: {
+      title: 'P12 访问记录与通知',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P12',
+      roles: ['STUDENT', 'SYS_ADMIN'],
     },
   },
   {
@@ -124,6 +135,16 @@ export const routeTable = [
     },
   },
   {
+    path: '/evidence/approval',
+    component: 'EvidenceApprovalPage',
+    meta: {
+      title: 'P14 存证审批详情',
+      requiresAuth: true,
+      menu: false,
+      roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
     path: '/authorization/approval',
     component: 'AuthorizationApprovalPage',
     meta: {
@@ -134,13 +155,14 @@ export const routeTable = [
     },
   },
   {
-    path: '/evidence/approval',
-    component: 'EvidenceApprovalPage',
+    path: '/student/archive',
+    component: 'StudentArchivePage',
     meta: {
-      title: 'P14 存证审批详情',
+      title: 'P16 学生档案总览',
       requiresAuth: true,
-      menu: false,
-      roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+      menu: true,
+      menuCode: 'P16',
+      roles: ['COUNSELOR', 'TEACHING_ADMIN'],
     },
   },
   {

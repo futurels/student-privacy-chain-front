@@ -69,13 +69,10 @@ export const router = {
     if (authStore.hasRole('SYS_ADMIN')) {
       return '/system/users'
     }
-    if (authStore.hasRole('COUNSELOR')) {
-      return '/evidence/list'
-    }
     if (authStore.hasRole('STUDENT')) {
       return '/privacy/list'
     }
-    if (authStore.hasRole('TEACHING_ADMIN')) {
+    if (authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN')) {
       return '/evidence/list'
     }
     return '/profile/security'

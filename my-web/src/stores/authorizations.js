@@ -3,14 +3,18 @@ import { authorizationsApi } from '../api/authorizations'
 import { authStore } from './auth'
 import { messageStore } from './message'
 
+const createPageState = () => ({
+  records: [],
+  total: 0,
+  pageNum: 1,
+  pageSize: 10,
+})
+
 const state = reactive({
-  pageData: {
-    records: [],
-    total: 0,
-    pageNum: 1,
-    pageSize: 10,
-  },
+  pageData: createPageState(),
+  activePageData: createPageState(),
   current: null,
+  currentAccessData: null,
 })
 
 const loading = ref(false)
@@ -18,6 +22,7 @@ const loading = ref(false)
 const normalizeAuthorizationRecord = (record = {}) => ({
   ...record,
   applicationId: record.applicationId || record.id || record.application_id || '',
+  authorizationId: record.authorizationId || record.authorization_id || record.authId || record.auth_id || '',
   applicationNo: record.applicationNo || record.application_no || '',
   privacyDataId: record.privacyDataId || record.privacy_data_id || '',
   studentId: record.studentId || record.student_id || '',
@@ -47,7 +52,15 @@ const normalizePageResult = (result = {}, fallback = {}) => ({
   pageSize: result.pageSize || fallback.pageSize || 10,
 })
 
-const normalizeFilters = (filters = {}) => {
+const normalizeApplicationFilters = (filters = {}) => {
+  const nextFilters = { ...filters }
+  if (authStore.hasRole('STUDENT')) {
+    delete nextFilters.studentId
+  }
+  return nextFilters
+}
+
+const normalizeActiveFilters = (filters = {}) => {
   const nextFilters = { ...filters }
   if (authStore.hasRole('STUDENT')) {
     delete nextFilters.studentId
@@ -71,10 +84,21 @@ export const authorizationsStore = {
   async loadPage(filters = {}, options = {}) {
     loading.value = true
     try {
-      const params = normalizeFilters(filters)
+      const params = normalizeApplicationFilters(filters)
       const result = await authorizationsApi.getApplicationPage(params, options)
       state.pageData = normalizePageResult(result, params)
       return state.pageData
+    } finally {
+      loading.value = false
+    }
+  },
+  async loadActivePage(filters = {}, options = {}) {
+    loading.value = true
+    try {
+      const params = normalizeActiveFilters(filters)
+      const result = await authorizationsApi.getActivePage(params, options)
+      state.activePageData = normalizePageResult(result, params)
+      return state.activePageData
     } finally {
       loading.value = false
     }
@@ -89,6 +113,21 @@ export const authorizationsStore = {
     try {
       state.current = normalizeAuthorizationRecord(await authorizationsApi.getApplicationDetail(id, options))
       return state.current
+    } finally {
+      loading.value = false
+    }
+  },
+  async accessAuthorizedData(id, options = {}) {
+    if (!id) {
+      state.currentAccessData = null
+      return null
+    }
+
+    loading.value = true
+    try {
+      state.currentAccessData = await authorizationsApi.accessAuthorizedData(id, options)
+      messageStore.success('授权数据访问成功，访问留痕已同步写入。', '访问成功')
+      return state.currentAccessData
     } finally {
       loading.value = false
     }

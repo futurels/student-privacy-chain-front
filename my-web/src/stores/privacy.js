@@ -14,10 +14,15 @@ const state = reactive({
   shareableTotal: 0,
   selectedShareData: null,
   current: null,
+  archive: {
+    studentInfo: null,
+    records: [],
+  },
 })
 
 const loading = ref(false)
 const shareableLoading = ref(false)
+const archiveLoading = ref(false)
 
 const normalizePageResult = (result = {}, fallback = {}) => ({
   records: result.records || [],
@@ -40,6 +45,7 @@ export const privacyStore = {
   state,
   loading,
   shareableLoading,
+  archiveLoading,
   async loadPage(filters = {}) {
     loading.value = true
     try {
@@ -90,6 +96,29 @@ export const privacyStore = {
       return state.current
     } finally {
       loading.value = false
+    }
+  },
+  async loadArchive(studentId, filters = {}, options = {}) {
+    if (!studentId) {
+      state.archive = {
+        studentInfo: null,
+        records: [],
+      }
+      return state.archive
+    }
+
+    archiveLoading.value = true
+    try {
+      const result = await privacyApi.getStudentArchive(studentId, {
+        dataType: filters.dataType || undefined,
+      }, options)
+      state.archive = {
+        studentInfo: result.studentInfo || null,
+        records: result.records || [],
+      }
+      return state.archive
+    } finally {
+      archiveLoading.value = false
     }
   },
   async create(payload) {

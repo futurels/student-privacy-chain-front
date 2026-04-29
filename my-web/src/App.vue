@@ -12,6 +12,8 @@ import PrivacyEditPage from './views/PrivacyEditPage.vue'
 import AuthorizationApplyPage from './views/AuthorizationApplyPage.vue'
 import AuthorizationListPage from './views/AuthorizationListPage.vue'
 import AuthorizationApprovalPage from './views/AuthorizationApprovalPage.vue'
+import AccessLogsPage from './views/AccessLogsPage.vue'
+import StudentArchivePage from './views/StudentArchivePage.vue'
 import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
 import EvidenceListPage from './views/EvidenceListPage.vue'
 import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
@@ -32,6 +34,8 @@ const pageMap = {
   AuthorizationApplyPage,
   AuthorizationListPage,
   AuthorizationApprovalPage,
+  AccessLogsPage,
+  StudentArchivePage,
   EvidenceApplyPage,
   EvidenceListPage,
   EvidenceDetailPage,
@@ -59,8 +63,8 @@ onMounted(async () => {
   <div v-if="!authStore.initialized.value" class="boot-screen">
     <div class="boot-card">
       <div class="boot-badge">第六阶段</div>
-      <h1>正在加载学生隐私数据工作台</h1>
-      <p>正在准备隐私数据、存证申请、授权申请与审批联动页面。</p>
+      <h1>正在加载授权访问与留痕模块</h1>
+      <p>正在准备隐私数据、存证申请、授权申请、有效授权访问与访问留痕联动页面。</p>
     </div>
   </div>
   <template v-else>

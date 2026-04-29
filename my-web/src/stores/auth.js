@@ -57,24 +57,30 @@ export const authStore = {
 
     if (authStore.hasRole('STUDENT')) {
       items.push({ path: '/privacy/list', title: '我的隐私数据', code: 'P03' })
-      items.push({ path: '/authorization/list', title: '授权申请与详情', code: 'P11' })
+      items.push({ path: '/authorization/list', title: '授权申请与有效授权', code: 'P11' })
+      items.push({ path: '/access/logs', title: '访问记录与通知', code: 'P12' })
     }
 
     if (authStore.hasRole('TEACHING_ADMIN') || authStore.hasRole('SYS_ADMIN')) {
       items.push({ path: '/files/manage', title: '文件附件管理', code: 'P06' })
     }
 
+    if (authStore.hasRole('STUDENT') || authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN')) {
+      items.push({ path: '/evidence/list', title: '存证申请与记录', code: 'P08' })
+      items.push({ path: '/authorization/list', title: '授权申请与有效授权', code: 'P11' })
+    }
+
+    if (authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN')) {
+      items.push({ path: '/student/archive', title: '学生档案总览', code: 'P16' })
+    }
+
+    if (authStore.hasRole('SYS_ADMIN')) {
+      items.push({ path: '/access/logs', title: '访问记录与通知', code: 'P12' })
+    }
+
     if (canAccessApproval()) {
       items.push({ path: '/approval/center', title: '审批中心', code: 'P13' })
       items.push({ path: '/approval/records', title: '审批记录', code: 'P17' })
-    }
-
-    if (authStore.hasRole('STUDENT') || authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN')) {
-      items.push({ path: '/evidence/list', title: '存证申请与记录', code: 'P08' })
-    }
-
-    if (!authStore.hasRole('STUDENT') && (authStore.hasRole('COUNSELOR') || authStore.hasRole('TEACHING_ADMIN'))) {
-      items.push({ path: '/authorization/list', title: '授权申请与详情', code: 'P11' })
     }
 
     if (authStore.hasRole('SYS_ADMIN')) {
@@ -83,7 +89,8 @@ export const authStore = {
     }
 
     items.push({ path: '/profile/security', title: '个人中心与安全设置', code: 'P25' })
-    return items
+
+    return items.filter((item, index, list) => list.findIndex((entry) => entry.path === item.path) === index)
   }),
   hasRole(role) {
     const roleCodes = Array.isArray(state.user?.roleCodes)
