@@ -1,7 +1,9 @@
 <script setup>
-import { computed, onMounted, reactive } from 'vue'
+import { computed, onMounted, reactive, ref } from 'vue'
 import AppPagination from '../components/AppPagination.vue'
 import { accessLogsStore } from '../stores/accessLogs'
+import { authorizationsStore } from '../stores/authorizations'
+import { authStore } from '../stores/auth'
 import { formatDateTime } from '../utils/helpers'
 import { router } from '../router'
 
@@ -14,8 +16,12 @@ const filters = reactive({
   privacyDataId: '',
 })
 
+const expireCheckLoading = ref(false)
+const expireCheckResult = ref(null)
+
 const records = computed(() => accessLogsStore.state.pageData.records)
 const total = computed(() => accessLogsStore.state.pageData.total)
+const showExpireCheckEntry = computed(() => authStore.hasRole('SYS_ADMIN'))
 
 const stats = computed(() => ({
   total: total.value,
@@ -48,6 +54,11 @@ async function loadPage() {
   await accessLogsStore.loadPage(filters, { silent: true })
 }
 
+async function refreshPage() {
+  filters.pageNum = 1
+  await loadPage()
+}
+
 async function resetFilters() {
   Object.assign(filters, {
     pageNum: 1,
@@ -63,6 +74,16 @@ async function changePage(page) {
   await loadPage()
 }
 
+async function triggerExpireCheck() {
+  expireCheckLoading.value = true
+  try {
+    expireCheckResult.value = await authorizationsStore.triggerExpireCheck({ silent: true })
+    await refreshPage()
+  } finally {
+    expireCheckLoading.value = false
+  }
+}
+
 onMounted(async () => {
   filters.studentId = query.value.get('studentId') || ''
   filters.privacyDataId = query.value.get('privacyDataId') || ''
@@ -76,14 +97,22 @@ onMounted(async () => {
       <div class="panel-header">
         <div>
           <span class="page-chip">P12</span>
-          <h3>访问记录与通知</h3>
-          <p>本页只对接访问留痕查询，支持按 studentId 与 privacyDataId 查看访问记录。</p>
+          <h3>访问记录与联动验证</h3>
+          <p>本页用于验证“查看授权数据 -> 写访问留痕 -> 撤销或到期后访问失败”的联动结果，支持按 studentId 与 privacyDataId 查询。</p>
+        </div>
+        <div class="action-row">
+          <button class="ghost-button" type="button" @click="refreshPage">刷新记录</button>
         </div>
       </div>
 
+      <div v-if="expireCheckResult" class="result-card result-good">
+        <strong>到期授权回收触发完成</strong>
+        <p>本次扫描 {{ expireCheckResult.checkedCount || 0 }} 条，识别到期 {{ expireCheckResult.expiredCount || 0 }} 条，成功回收 {{ expireCheckResult.revokedCount || 0 }} 条。</p>
+      </div>
+
       <form class="toolbar access-filter-grid" @submit.prevent="loadPage">
-        <input v-model.trim="filters.studentId" placeholder="按学生主键筛选" />
-        <input v-model.trim="filters.privacyDataId" placeholder="按隐私数据ID筛选" />
+        <input v-model.trim="filters.studentId" placeholder="按 studentId 查询" />
+        <input v-model.trim="filters.privacyDataId" placeholder="按 privacyDataId 查询" />
         <div class="action-row">
           <button class="secondary-button" type="submit">查询</button>
           <button class="ghost-button" type="button" @click="resetFilters">重置</button>
@@ -123,7 +152,7 @@ onMounted(async () => {
               <th>日志主键</th>
               <th>授权主键</th>
               <th>访问者</th>
-              <th>隐私数据ID</th>
+              <th>隐私数据 ID</th>
               <th>访问时间</th>
               <th>结果</th>
             </tr>
@@ -158,25 +187,35 @@ onMounted(async () => {
       <aside class="panel detail-panel">
         <div class="panel-header">
           <div>
-            <span class="page-chip">访问提醒</span>
-            <h3>说明与通知</h3>
+            <span class="page-chip">联动提示</span>
+            <h3>验证说明</h3>
           </div>
         </div>
 
         <div class="notice-card">
           <strong>当前查询范围</strong>
-          <p>学生主键：{{ filters.studentId || '未限定' }}</p>
-          <p>隐私数据ID：{{ filters.privacyDataId || '未限定' }}</p>
+          <p>studentId：{{ filters.studentId || '未限定' }}</p>
+          <p>privacyDataId：{{ filters.privacyDataId || '未限定' }}</p>
         </div>
 
         <div class="notice-card">
-          <strong>使用说明</strong>
-          <p>访问成功意味着后端已允许读取授权数据；访问拒绝或失败时，可结合授权状态进一步排查。</p>
+          <strong>验证路径</strong>
+          <p>先到 P11 有效授权页签调用“查看授权数据”，确认成功写入访问留痕；再撤销授权或触发到期回收，回到本页刷新记录，观察访问结果是否变化。</p>
         </div>
 
         <div class="notice-card">
-          <strong>联动入口</strong>
-          <p>如需从授权侧回看来源，可先到 P11 有效授权页签访问数据，再回到本页验证访问留痕是否生成。</p>
+          <strong>结果解读</strong>
+          <p>SUCCESS 表示访问通过；DENIED 或 REJECTED 通常表示授权已撤销、已到期或不再满足访问条件；FAILED 表示后端访问处理异常。</p>
+        </div>
+
+        <div v-if="showExpireCheckEntry" class="notice-card">
+          <strong>管理端手工触发</strong>
+          <p>当前账号可直接调用 API-46，对到期授权执行一次手工回收扫描，用于联调自动到期回收逻辑。</p>
+          <div class="action-row">
+            <button class="secondary-button" type="button" :disabled="expireCheckLoading" @click="triggerExpireCheck">
+              {{ expireCheckLoading ? '触发中...' : '触发到期回收' }}
+            </button>
+          </div>
         </div>
       </aside>
     </section>

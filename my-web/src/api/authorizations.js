@@ -19,7 +19,16 @@ export const authorizationsApi = {
   getActivePage(params = {}, options = {}) {
     return http.get('/api/authorizations/active', params, options)
   },
+  revokeAuthorization(id, payload = {}, options = {}) {
+    return http.post(`/api/authorizations/${id}/revoke`, payload, options)
+  },
   accessAuthorizedData(id, options = {}) {
     return http.get(`/api/authorizations/${id}/access`, undefined, options)
+  },
+  getHistoryPage(params = {}, options = {}) {
+    return http.get('/api/authorizations/history', params, options)
+  },
+  triggerExpireCheck(options = {}) {
+    return http.post('/api/authorizations/expire/check', {}, options)
   },
 }

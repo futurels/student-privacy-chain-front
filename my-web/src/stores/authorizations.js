@@ -13,8 +13,11 @@ const createPageState = () => ({
 const state = reactive({
   pageData: createPageState(),
   activePageData: createPageState(),
+  historyPageData: createPageState(),
   current: null,
   currentAccessData: null,
+  lastRevocationResult: null,
+  lastExpireCheckResult: null,
 })
 
 const loading = ref(false)
@@ -43,10 +46,12 @@ const normalizeAuthorizationRecord = (record = {}) => ({
   securityLevel: record.securityLevel || '',
   evidenceNo: record.evidenceNo || '',
   txId: record.txId || '',
+  revokedAt: record.revokedAt || record.revoked_at || '',
+  revokeReason: record.revokeReason || record.reason || record.revoke_reason || '',
 })
 
 const normalizePageResult = (result = {}, fallback = {}) => ({
-  records: (result.records || []).map(normalizeAuthorizationRecord),
+  records: (result.records || result.list || []).map(normalizeAuthorizationRecord),
   total: result.total || 0,
   pageNum: result.pageNum || fallback.pageNum || 1,
   pageSize: result.pageSize || fallback.pageSize || 10,
@@ -61,6 +66,14 @@ const normalizeApplicationFilters = (filters = {}) => {
 }
 
 const normalizeActiveFilters = (filters = {}) => {
+  const nextFilters = { ...filters }
+  if (authStore.hasRole('STUDENT')) {
+    delete nextFilters.studentId
+  }
+  return nextFilters
+}
+
+const normalizeHistoryFilters = (filters = {}) => {
   const nextFilters = { ...filters }
   if (authStore.hasRole('STUDENT')) {
     delete nextFilters.studentId
@@ -103,6 +116,17 @@ export const authorizationsStore = {
       loading.value = false
     }
   },
+  async loadHistoryPage(filters = {}, options = {}) {
+    loading.value = true
+    try {
+      const params = normalizeHistoryFilters(filters)
+      const result = await authorizationsApi.getHistoryPage(params, options)
+      state.historyPageData = normalizePageResult(result, params)
+      return state.historyPageData
+    } finally {
+      loading.value = false
+    }
+  },
   async loadDetail(id, options = {}) {
     if (!id) {
       state.current = null
@@ -128,6 +152,28 @@ export const authorizationsStore = {
       state.currentAccessData = await authorizationsApi.accessAuthorizedData(id, options)
       messageStore.success('授权数据访问成功，访问留痕已同步写入。', '访问成功')
       return state.currentAccessData
+    } finally {
+      loading.value = false
+    }
+  },
+  async revoke(id, payload = {}, options = {}) {
+    loading.value = true
+    try {
+      state.lastRevocationResult = normalizeAuthorizationRecord(
+        await authorizationsApi.revokeAuthorization(id, payload, options),
+      )
+      messageStore.success('有效授权已撤销。', '撤销成功')
+      return state.lastRevocationResult
+    } finally {
+      loading.value = false
+    }
+  },
+  async triggerExpireCheck(options = {}) {
+    loading.value = true
+    try {
+      state.lastExpireCheckResult = await authorizationsApi.triggerExpireCheck(options)
+      messageStore.success('到期授权回收触发完成。', '回收完成')
+      return state.lastExpireCheckResult
     } finally {
       loading.value = false
     }
