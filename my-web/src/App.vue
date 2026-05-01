@@ -18,6 +18,7 @@ import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
 import EvidenceListPage from './views/EvidenceListPage.vue'
 import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
 import EvidenceApprovalPage from './views/EvidenceApprovalPage.vue'
+import ApprovalHistoryPage from './views/ApprovalHistoryPage.vue'
 import ApprovalRecordsPage from './views/ApprovalRecordsPage.vue'
 import UserManagementPage from './views/UserManagementPage.vue'
 import RoleDeptPage from './views/RoleDeptPage.vue'
@@ -40,6 +41,7 @@ const pageMap = {
   EvidenceListPage,
   EvidenceDetailPage,
   EvidenceApprovalPage,
+  ApprovalHistoryPage,
   ApprovalRecordsPage,
   UserManagementPage,
   RoleDeptPage,
