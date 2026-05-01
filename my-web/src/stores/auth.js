@@ -1,7 +1,7 @@
 import { computed, reactive, ref } from 'vue'
 import { authApi } from '../api/auth'
-import { usersApi } from '../api/users'
 import { http } from '../api/http'
+import { usersApi } from '../api/users'
 import { tokenStorage } from '../utils/storage'
 import { messageStore } from './message'
 
@@ -33,18 +33,18 @@ const clearSession = () => {
   state.permissionsTree = []
 }
 
-const canAccessApproval = () => (
-  authStore.hasRole('COUNSELOR') ||
-  authStore.hasRole('TEACHING_ADMIN') ||
-  authStore.hasRole('SYS_ADMIN')
-)
-
 const normalizeRoleCode = (role) => {
   if (typeof role === 'string') {
     return role
   }
   return role?.roleCode || role?.code || role?.name || ''
 }
+
+const canAccessApproval = () => (
+  authStore.hasRole('COUNSELOR')
+  || authStore.hasRole('TEACHING_ADMIN')
+  || authStore.hasRole('SYS_ADMIN')
+)
 
 export const authStore = {
   state,
@@ -76,6 +76,7 @@ export const authStore = {
 
     if (authStore.hasRole('SYS_ADMIN')) {
       items.push({ path: '/access/logs', title: '访问记录与通知', code: 'P12' })
+      items.push({ path: '/audit/logs', title: '审计日志中心', code: 'P18' })
     }
 
     if (canAccessApproval()) {
@@ -150,7 +151,7 @@ export const authStore = {
     try {
       await authApi.logout()
     } catch {
-      // 忽略退出接口失败。
+      // 忽略退出接口失败，仍然清理前端会话。
     }
     clearSession()
   },

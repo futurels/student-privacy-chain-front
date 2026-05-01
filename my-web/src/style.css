@@ -2083,6 +2083,10 @@ p {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.audit-log-filter-grid {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
 .approval-filter-tip {
   display: grid;
   gap: 4px;
@@ -2213,6 +2217,7 @@ p {
   .evidence-filter-grid,
   .authorization-filter-grid,
   .approval-filter-grid,
+  .audit-log-filter-grid,
   .access-filter-grid,
   .archive-filter-grid {
     grid-template-columns: 1fr;

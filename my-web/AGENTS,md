@@ -53,31 +53,42 @@
 2. 接口联调清单
 3. 自测方法
 4. 未完成项 / 风险点
-
-## 当前阶段：第七阶段-第一小段（审批记录查询与详情展示）
+## 当前阶段：第七阶段-第三小段（业务追溯详情聚合）
 
 ### 当前阶段目标
 本小段只实现：
-- P17 审批记录查询页
-- 审批记录详情展示
+- 按业务编号追溯操作链
+- 多来源事件聚合
+- 时间线节点输出
 
-### 本小段允许调用的接口
-- API-47 审批记录分页查询
-- API-48 审批记录详情查询
+### 当前阶段限界上下文
+- Trace Query Context
+  - 当前只实现 BusinessTrace Query 子域
+
+### 本小段允许开发的接口
+- API-51 按业务编号追溯操作链
+
+### 本小段允许使用的数据表
+- audit_log
+- approval_record
+- access_log
+- blockchain_tx_record
+- 可只读 privacy_data、evidence_application、evidence_record、authorization_application、authorization_record 做业务摘要补充
 
 ### 强约束
-1. 页面角色限制为 COUNSELOR、TEACHING_ADMIN、SYS_ADMIN。
-2. 列表必须支持 businessType、status 筛选。
-3. 默认按审批时间倒序展示。
-4. 详情只展示审批记录本身信息，不扩展成完整业务追溯页。
-5. 不允许提前开发 P18、P19、P20 等后续页面。
-6. 页面优先可用和可联调，不做统计图表。
-7. 不强制新建全局 store，优先页面内查询状态 + API 函数。
+1. 主入口必须是 businessType + businessId。
+2. 必须支持 PRIVACY_DATA、EVIDENCE、AUTHORIZATION 三种业务类型。
+3. traceNodes 统一输出 action、operatorName、result、occurredAt、remark。
+4. 节点必须按 occurredAt 正序。
+5. 优先从 audit_log 聚合关键节点，其他表只做补充。
+6. remark 必须语义化，不直接原样返回原始 detail_json。
+7. 仅 TEACHING_ADMIN、SYS_ADMIN 可访问。
+8. controller 不写核心业务逻辑。
+9. 不允许提前开发 API-53 及之后接口。
 
 ### 输出要求
 每次任务输出必须包含：
-1. 新增页面/组件清单
-2. 路由清单
-3. 接口联调清单
-4. 自测方法
-5. 未完成项 / 风险点
+1. 修改文件清单
+2. 新增文件清单
+3. 自测方法
+4. 未完成项 / 风险点

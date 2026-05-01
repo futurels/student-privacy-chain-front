@@ -43,7 +43,7 @@ export const routeTable = [
     path: '/privacy/edit',
     component: 'PrivacyEditPage',
     meta: {
-      title: 'P05 新增/编辑隐私数据',
+      title: 'P05 新增或编辑隐私数据',
       requiresAuth: true,
       menu: false,
       roles: ['STUDENT', 'TEACHING_ADMIN'],
@@ -74,7 +74,7 @@ export const routeTable = [
     path: '/evidence/list',
     component: 'EvidenceListPage',
     meta: {
-      title: 'P08 存证申请与记录列表',
+      title: 'P08 存证申请与记录',
       requiresAuth: true,
       menu: true,
       menuCode: 'P08',
@@ -167,13 +167,24 @@ export const routeTable = [
   },
   {
     path: '/approval/records',
-    component: 'ApprovalRecordsPage',
+    component: 'ApprovalHistoryPage',
     meta: {
       title: 'P17 审批记录查询',
       requiresAuth: true,
       menu: true,
       menuCode: 'P17',
       roles: ['COUNSELOR', 'TEACHING_ADMIN', 'SYS_ADMIN'],
+    },
+  },
+  {
+    path: '/audit/logs',
+    component: 'AuditLogCenterPage',
+    meta: {
+      title: 'P18 审计日志中心',
+      requiresAuth: true,
+      menu: true,
+      menuCode: 'P18',
+      roles: ['SYS_ADMIN'],
     },
   },
   {

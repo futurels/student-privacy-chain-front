@@ -1,30 +1,31 @@
 <script setup>
 import { computed, onMounted } from 'vue'
+import AppLayout from './components/AppLayout.vue'
+import { router } from './router'
 import { authStore } from './stores/auth'
 import { messageStore } from './stores/message'
-import { router } from './router'
-import AppLayout from './components/AppLayout.vue'
-import LoginPage from './views/LoginPage.vue'
-import PrivacyListPage from './views/PrivacyListPage.vue'
-import FileAttachmentPage from './views/FileAttachmentPage.vue'
-import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
-import PrivacyEditPage from './views/PrivacyEditPage.vue'
-import AuthorizationApplyPage from './views/AuthorizationApplyPage.vue'
-import AuthorizationListPage from './views/AuthorizationListPage.vue'
-import AuthorizationApprovalPage from './views/AuthorizationApprovalPage.vue'
 import AccessLogsPage from './views/AccessLogsPage.vue'
-import StudentArchivePage from './views/StudentArchivePage.vue'
-import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
-import EvidenceListPage from './views/EvidenceListPage.vue'
-import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
-import EvidenceApprovalPage from './views/EvidenceApprovalPage.vue'
 import ApprovalHistoryPage from './views/ApprovalHistoryPage.vue'
 import ApprovalRecordsPage from './views/ApprovalRecordsPage.vue'
-import UserManagementPage from './views/UserManagementPage.vue'
-import RoleDeptPage from './views/RoleDeptPage.vue'
-import ProfileSecurityPage from './views/ProfileSecurityPage.vue'
+import AuditLogCenterPage from './views/AuditLogCenterPage.vue'
+import AuthorizationApplyPage from './views/AuthorizationApplyPage.vue'
+import AuthorizationApprovalPage from './views/AuthorizationApprovalPage.vue'
+import AuthorizationListPage from './views/AuthorizationListPage.vue'
+import EvidenceApplyPage from './views/EvidenceApplyPage.vue'
+import EvidenceApprovalPage from './views/EvidenceApprovalPage.vue'
+import EvidenceDetailPage from './views/EvidenceDetailPage.vue'
+import EvidenceListPage from './views/EvidenceListPage.vue'
+import FileAttachmentPage from './views/FileAttachmentPage.vue'
 import ForbiddenPage from './views/ForbiddenPage.vue'
+import LoginPage from './views/LoginPage.vue'
 import NotFoundPage from './views/NotFoundPage.vue'
+import PrivacyDetailPage from './views/PrivacyDetailPage.vue'
+import PrivacyEditPage from './views/PrivacyEditPage.vue'
+import PrivacyListPage from './views/PrivacyListPage.vue'
+import ProfileSecurityPage from './views/ProfileSecurityPage.vue'
+import RoleDeptPage from './views/RoleDeptPage.vue'
+import StudentArchivePage from './views/StudentArchivePage.vue'
+import UserManagementPage from './views/UserManagementPage.vue'
 
 const pageMap = {
   LoginPage,
@@ -43,6 +44,7 @@ const pageMap = {
   EvidenceApprovalPage,
   ApprovalHistoryPage,
   ApprovalRecordsPage,
+  AuditLogCenterPage,
   UserManagementPage,
   RoleDeptPage,
   ProfileSecurityPage,
@@ -64,9 +66,9 @@ onMounted(async () => {
 <template>
   <div v-if="!authStore.initialized.value" class="boot-screen">
     <div class="boot-card">
-      <div class="boot-badge">第六阶段</div>
-      <h1>正在加载授权访问与留痕模块</h1>
-      <p>正在准备隐私数据、存证申请、授权申请、有效授权访问与访问留痕联动页面。</p>
+      <div class="boot-badge">第七阶段</div>
+      <h1>正在加载审批与审计中心模块</h1>
+      <p>正在准备审批记录查询、审计日志中心及后续追溯入口的基础页面。</p>
     </div>
   </div>
   <template v-else>
